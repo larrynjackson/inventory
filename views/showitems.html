@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"
+        integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+        crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+
+</head>
+
+<body>
+
+    <header class="bg-white">
+        <nav class="flex  justify-between items-center w-[92%]  mx-auto">
+            <div>
+                <img class="w-20 p-1" src="{{ .MenuImageFile }}" alt="little flag" />
+            </div>
+
+            <h1 class="text-2xl">Inventory System</h1>
+            <button hx-get="/api/v1/menuform" hx-trigger="click" hx-swap="outerHTML" hx-target="body" type="button"
+                id="submitBtn"
+                class="px-5 py-2 ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[15%] h-12 rounded-full"
+                onclick="handleClick('back')">
+                Back
+            </button>
+
+        </nav>
+    </header>
+    <hr class="my-0 h-4 border-t-2 bg-red-100 dark:bg-red/10" />
+
+    <div class="bg-cover bg-center h-screen"
+        style="background-image: url('http://localhost:8000/api/v1/getfile/ohioriverview.jpg');">
+        <!-- Your content here -->
+
+        <div id="mainPage" class="flex flex-col gap-5 align-right items-center">
+
+            <form id="itemForm" class="py-10">
+                <div id="pictureDiv" class="flex justify-center flex-row  gap-5 align-right items-center">
+                    <button {{.Pictures.DisableLeft}} hx-post="/api/v1/nextpic" hx-trigger="click" hx-swap="innerHTML"
+                        hx-target="#pictureDiv" type="button" id="nextBtn"
+                        class="px-5 py-2 ring-5 ring-green-600 bg-transparent ring-opacity-25 w-[8%] h-8 rounded-full"
+                        onclick="handleClick('prev')">
+                        &lt;&lt;
+                    </button>
+                    <div class="mb-2">
+                        <input type="text" name="selectedItem" id="selectedItem" value="" class="hidden" />
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="currentFile" id="currentFile" value="{{.Pictures.CurrentFile}}"
+                            class="hidden" />
+                    </div>
+                    <div class="mb-2">
+                        <input type="text" name="fileDirection" id="fileDirection" value="" class="hidden" />
+                    </div>
+
+                    <article class="max-w-sm rounded overflow-hidden shadow-lg">
+                        <img class="w-80 h-64 p-4" src="{{ .Pictures.DisplayFile }}" alt="No Pictures" />
+                    </article>
+                    <button {{.Pictures.DisableRight}} hx-post="/api/v1/nextpic" hx-trigger="click" hx-swap="innerHTML"
+                        hx-target="#pictureDiv" type="button" id="nextBtn"
+                        class="px-5 py-2 ring-5 ring-green-600 bg-transparent ring-opacity-25 w-[8%] h-8 rounded-full"
+                        onclick="handleClick('next')">
+                        &gt;&gt;
+                    </button>
+
+                </div>
+            </form>
+            <div class="Container fixed bottom-10">
+                <div class="grid grid-row-1 grid-flow-col gap-3 px-5">
+                    <div class="col-1">
+                        <h1 class="mb-4 text-center text-2xl text-white">Item List</h1>
+                        <div id="itemList" class="max-w-sm mx-auto">
+                            <label for="itemSelect"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                            <select id="itemSelect" name="itemSelect" hx-get="/api/v1/showitemsform" hx-swap="outerHTML"
+                                hx-trigger="submit, change" hx-target="body"
+                                class="bg-gray-200 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 p-1">
+
+                                {{range .ItemList}}
+                                <option {{.Selected}} value={{.Key}}>{{.Name}}</option>
+                                {{end}}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-2">
+                        <div>
+                            <div id="nameDiv" class="mb-2">
+                                <label for="name" class="text-white">Name</label>
+                                <input readonly name="name" id="name" value="{{.SelectedItemName}}" type="text"
+                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                            </div>
+                            <label for="description" class="text-white">Description</label>
+                            <div id="descriptionDiv" class="mb-3">
+                                <textarea readonly rows="5" cols="45" id="description" name="description"
+                                    class="p-3 ring-5 ring-green-600 bg-green-100 ring-opacity-25 text-left">{{.SelectedItemDescription}}
+
+
+
+
+                        </textarea>
+                            </div>
+                            <div class="p-2">
+                                <p></p>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div>
+                            <div id="priceDiv" class="mb-2">
+                                <label for="value" class="text-white">Value</label>
+                                <input readonly name="value" value="{{.SelectedItemValue}}" id="value" type="text"
+                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                            </div>
+                            <div id="purchacedateDiv" class="mb-2">
+                                <label for="purchasedate" class="text-white">Purchase Date</label>
+                                <input readonly name="purchasedate" value="{{.SelectedItemPurchaseDate}}"
+                                    id="purchasedate" value="" type="text"
+                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                            </div>
+                            <div id="serialnumDiv" class="mb-2">
+                                <label for="serialnum" class="text-white">Serial Number</label>
+                                <input readonly name="serialnum" value="{{.SelectedItemSerialNum}}" id="serialnum"
+                                    value="" type="text"
+                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                            </div>
+                            <div class="p-2">
+                                <p></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+
+
+<script type="text/javascript">
+
+
+    function handleClick(direction) {
+
+        let itemSelected = document.getElementById("itemSelect").value
+        document.getElementById("selectedItem").value = itemSelected
+        if (direction === "prev") {
+            document.getElementById("fileDirection").value = "prev";
+        } else if (direction === "next") {
+            document.getElementById("fileDirection").value = "next";
+        }
+    }
+
+</script>
+
+</html>

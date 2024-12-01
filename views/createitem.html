@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"
+        integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+        crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <header class="bg-white">
+        <nav class="flex  justify-between items-center w-[92%]  mx-auto">
+            <div>
+                <img class="w-20 p-1" src="{{ .MenuImageFile }}" alt="flag" />
+            </div>
+            <h1 class="text-2xl">Inventory System</h1>
+            <button hx-get="/api/v1/menuform" hx-trigger="click" hx-swap="outerHTML" hx-target="body" type="button"
+                class="px-5 py-2 ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[15%] h-12 rounded-full"
+                id="submitBtn">
+                Back
+            </button>
+        </nav>
+    </header>
+    <hr class="my-0 h-4 border-t-2 bg-red-100 dark:bg-red/10" />
+    <div class="bg-cover bg-center h-screen"
+        style="background-image: url('http://localhost:8000/api/v1/getfile/ohioriverview.jpg');">
+        <!-- Your content here -->
+
+        <div id="mainPage" class="flex flex-col gap-5 align-right items-center">
+            <div class="Container fixed bottom-10">
+                <div>
+                    <input type="text" name="errorMsg" id="errorMsg" disabled="true" value="{{ .Message}}"
+                        class="bg-transparent text-red-700 text text-center w-full h-8 rounded-lg px-5">
+                </div>
+                <div>
+                    <input type="text" name="message" id="message" disabled="true" value="All fields required."
+                        class="bg-transparent text-red-700 text text-center w-full h-8 rounded-lg px-5">
+                </div>
+                <h1 class="mb-4 text-white text-center text-2xl">Create New Item</h1>
+                <form id="itemForm">
+                    <div class="grid grid-row-1 grid-flow-col gap-3 px-2">
+                        <div class="col-1">
+                            <div class="mb-2">
+                                <input type="text" name="machineId" id="machineId" value="" class="hidden" />
+                            </div>
+                            <div id="nameDiv" class="mb-2">
+                                <label class="text-white" for="name">Name</label>
+                                <input autofocus name="name" id="name" onkeyup="handleChange()" type="text"
+                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                            </div>
+                            <label class="text-white" for="description">Description</label>
+                            <div id="descriptionDiv" class="mb-3">
+                                <textarea onkeyup="handleChange()" rows="5" cols="45" id="description"
+                                    name="description"
+                                    class="p-3 ring-5 ring-green-600 bg-green-100 ring-opacity-25 text-left">
+
+
+
+
+
+                        </textarea>
+                            </div>
+                        </div>
+                        <div class="col-2">
+                            <div>
+                                <div id="priceDiv" class="mb-2">
+                                    <label class="text-white" for="value">Value</label>
+                                    <input name="value" id="value" onkeyup="handleChange()" type="text"
+                                        class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                                </div>
+                                <div id="purchacedateDiv" class="mb-2">
+                                    <label class="text-white" for="purchasedate">Purchase Date</label>
+                                    <input name="purchasedate" id="purchasedate" value="" onkeyup="handleChange()"
+                                        type="text"
+                                        class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                                </div>
+                                <div id="serialnumDiv" class="mb-2">
+                                    <label class="text-white" for="serialnum">Serial Number</label>
+                                    <input name="serialnum" id="serialnum" value="" onkeyup="handleChange()" type="text"
+                                        class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                                </div>
+                                <div class="p-2">
+                                    <p></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center flex-row">
+                        <button hx-post="/api/v1/createitem" hx-trigger="click" hx-swap="outerHTML" hx-target="body"
+                            id="createitemBtn"
+                            class="w-40 ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[40%] h-12 rounded-full g-3"
+                            disabled="true">
+                            Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script type="text/javascript">
+    function handleChange() {
+
+        let activeBtn
+        let inputs = [];
+
+        activeBtn = document.getElementById("createitemBtn");
+        inputs.push(document.querySelector("#name"));
+        inputs.push(document.querySelector("#description"));
+        inputs.push(document.querySelector("#value"));
+        inputs.push(document.querySelector("#purchasedate"));
+        inputs.push(document.querySelector("#serialnum"));
+
+        let isValid = true;
+
+        for (var i = 0; i < inputs.length; i++) {
+            let changedInput = inputs[i];
+            if (changedInput.value.trim() === "" || changedInput.value === null) {
+                isValid = false;
+            }
+        }
+        let msg = document.querySelector("#message")
+
+        if (isValid) {
+            msg.value = "";
+        } else {
+            msg.value = "All fields required.";
+        }
+
+        activeBtn.disabled = !isValid;
+    }
+
+</script>
+
+</html>

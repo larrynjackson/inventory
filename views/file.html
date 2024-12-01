@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"
+        integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+        crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+
+</head>
+
+<body>
+    <header class="bg-white">
+        <nav class="flex  justify-between items-center w-[92%]  mx-auto">
+            <div>
+                <img class="w-20 p-1" src="{{ .MenuImageFile }}" alt="flag" />
+            </div>
+
+            <h1 class="text-2xl">Inventory System</h1>
+            <button hx-get="/api/v1/menuform" hx-trigger="click" hx-swap="outerHTML" hx-target="body" type="button"
+                class="px-5 py-2 ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[15%] h-12 rounded-full"
+                id="submitBtn">
+                Back
+            </button>
+
+        </nav>
+    </header>
+    <hr class="my-0 h-4 border-t-2 bg-red-100 dark:bg-red/10" />
+
+    <div class="bg-cover bg-center h-screen"
+        style="background-image: url('http://localhost:8000/api/v1/getfile/ohioriverview.jpg');">
+        <!-- Your content here -->
+
+        <div id="mainPage" class="flex flex-col gap-5 align-center items-center">
+            <div class="Container fixed bottom-10">
+                <div>
+                    <input type="text" name="errorMsg" id="errorMsg" disabled="true" value="{{ .Message}}"
+                        class="bg-transparent text-red-700 text text-center w-full h-8 rounded-lg px-5">
+                </div>
+                <div>
+                    <input type="text" name="message" id="message" disabled="true" value="All fields required."
+                        class="bg-transparent text-red-700 text text-center w-full h-8 rounded-lg px-5">
+                </div>
+                <div class="grid grid-row-1 grid-flow-col gap-3 px-5">
+
+
+                    <div class="col-1">
+
+                        <h1 class="mb-4 text-center text-2xl">Item List</h1>
+                        <form>
+                            <div id="itemList" class="max-w-sm mx-auto">
+                                <label for="itemSelect"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"></label>
+                                <select id="itemSelect" name="itemSelect" hx-get="/api/v1/fileform" hx-swap="outerHTML"
+                                    hx-trigger="submit, change" hx-target="body"
+                                    class="bg-gray-200 border border-gray-300 rounded-lg focus:ring-gray-500 focus:border-gray-500 p-1">
+                                    <option>Choose an Item</option>
+                                    {{range .ItemList}}
+                                    <option {{.Selected}} value={{.Key}}>{{.Name}}</option>
+                                    {{end}}
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="col-2">
+                        <h1 class="mb-4 text-center text-2xl">Copy Image File</h1>
+                        <form id="fileForm">
+                            <div class="mb-2">
+                                <input type="text" name="selectedItem" id="selectedItem" value="" class="hidden" />
+                            </div>
+                            <div class="mb-2">
+                                <input type="text" name="machineId" id="machineId" value="" class="hidden" />
+                            </div>
+                            <div>
+                                <input type="text" name="pictureFile" id="pictureFile" class="hidden" />
+                            </div>
+
+                            <div>
+                                <input type="file" id="copyfile" onchange="handleChange()" /><br /><br />
+                                <label for="pictureFilePath">Enter File Path</label>
+                                <input type="text" name="pictureFilePath" id="pictureFilePath" oninput="handleChange()"
+                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                                <br /><br />
+
+                                <button hx-post="/api/v1/copyfile" hx-swap="outerHTML" hx-target="body" id="fileBtn"
+                                    type="submit" disabled="true"
+                                    class="w-full ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[40%] h-10 rounded-full g-2"
+                                    onclick="handleClick()">
+                                    Copy File
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="p-2"></div>
+
+                <textarea rows="10" cols="70" readonly
+                    class="p-2 ring-5 ring-green-600 bg-white ring-opacity-25 align-center">
+
+                To copy your images files into the Inventory System do the following:
+                  1. Choose an Item by name.
+                  2. Click the Browse... button to bring up the file select dialog
+                  3. Using the file dialog, locate the file to be copied
+                  4. Highlight the located file. then right click and select 'Copy Location'
+                  5. Click the Select button in the dialog box
+                  6. Click in the 'Enter File Path' box, then right click and Paste
+                  7. Submit by clicking the 'Copy File' button
+            </textarea>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script type="text/javascript">
+
+    function handleChange() {
+
+        let itemSelected = document.getElementById("itemSelect").value;
+        let fileValue = document.getElementById("copyfile").value;
+        let filePath = document.getElementById("pictureFilePath").value;
+
+        let fileBtn = document.getElementById("fileBtn")
+
+
+        let isValid = true;
+
+        if (itemSelected.length > 4) {
+            isValid = false;
+        }
+
+        if (fileValue.trim() === "" || fileValue === null) {
+            isValid = false;
+        }
+
+        if (filePath.trim() === "" || filePath === null) {
+            isValid = false;
+        }
+
+        let msg = document.querySelector("#message")
+
+        if (isValid) {
+            msg.value = "";
+        } else {
+            msg.value = "All fields required.";
+        }
+        fileBtn.disabled = !isValid;
+
+    }
+
+    function handleClick() {
+        let itemSelected = document.getElementById("itemSelect").value
+        document.getElementById("selectedItem").value = itemSelected
+
+        let filevalue = document.getElementById("copyfile").value;
+        let filearray = filevalue.split("\\");
+
+        document.getElementById("pictureFile").value = filearray[filearray.length - 1];
+    }
+
+</script>
+
+
+
+<script type="text/javascript">
+
+    function getMachineId() {
+        let machineId = localStorage.getItem('MachineId');
+
+        if (!machineId) {
+            machineId = crypto.randomUUID();
+            localStorage.setItem('MachineId', machineId);
+        }
+
+        return machineId;
+    }
+    document.getElementById("machineId").value = getMachineId();
+</script>
+
+
+
+</html>

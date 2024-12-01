@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"
+        integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+        crossorigin="anonymous"></script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+            rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <header class="bg-white">
+        <nav class="flex  justify-between items-center w-[92%]  mx-auto">
+            <div>
+                <img class="w-20 p-1"
+                    src="http://localhost:8000/api/v1/getfile/flag.jpeg"
+                    alt="flag">
+
+
+            </div>
+            <h1 class="text-2xl">Inventory System</h1>
+            <button 
+                hx-get="/api/v1/menuform" 
+                hx-trigger="click" 
+                hx-swap="outerHTML" 
+                hx-target="body" 
+                type="button"
+                id="submitBtn"
+                class="px-5 py-2 ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[15%] h-12 rounded-full"
+                onclick="handleClick()">
+                Back
+            </button>
+            <!-- <button id="submit-btn" class="bg-white  w-[25%] h-12 rounded-full cursor-default">
+                    </button> -->
+
+        </nav>
+    </header>
+    <hr class="my-0 h-4 border-t-2 bg-red-100 dark:bg-red/10" />
+
+    <!-- <div class="inline-block p-4 size-6 border-[3px] border-current border-t-transparent text-white rounded-full"
+        role="status" aria-label="loading"></div>
+    <div class="hidden animate-spin inline-block p-4 size-6 border-[3px] border-current border-t-transparent text-green-600 rounded-full"
+        role="status" aria-label="loading" id="spinner"></div> -->
+
+    <div id="mainPage" class="flex flex-col gap-20 align-center items-center">
+
+        <h1 class="text-2xl">Pokemon Cards</h1>
+        <div class="grid grid-cols-4 align-center gap-5">
+            <article class="card w-48 bg-base-100 shadow-lg border-2 border-gray-500">
+                <div class="card-body p-4">
+                    <img class="self-center" alt="{{.Name}}" width="80"
+                        src="{{.Sprites.Other.Showdown.FrontDefault}}" />
+                    <h2 class="card-title self-center"> {{.Name}}</h2>
+                    <div class="divider mx-[-18px] my-0 border-color-gray-400"></div>
+                    <ul>
+                        {{range .Types}}
+                        <li><strong>Type:</strong> {{.TypeDetail.Name}}</li>
+                        {{end}}
+                        <li><strong>Height:</strong> {{.Height}}</li>
+                        <li><strong>Weight:</strong> {{.Weight}}</li>
+                    </ul>
+                </div>
+            </article>
+            <div class="card w-48 bg-base-100 shadow-xl border-2 border-gray-500" id="targetDiv">
+                <form 
+                    hx-post="/api/v1/pokemon/poke" 
+                    hx-swap="outerHTML" 
+                    hx-target="#targetDiv"
+                    class="card-body justify-center p-4">
+                    <h2 class="card-title self-center">Add more</h2>
+                    <input type="text" name="pokemon" placeholder="Type here"
+                        class="input input-5m input-border w-full max-w-x5" />
+                    <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                </form>
+            </div>
+        </div>
+</body>
+
+<script type="text/javascript">
+
+    function getMachineId() {
+        let machineId = localStorage.getItem('MachineId');
+
+        if (!machineId) {
+            machineId = crypto.randomUUID();
+            localStorage.setItem('MachineId', machineId);
+        }
+
+        return machineId;
+    }
+
+</script>
+
+<script>
+    function handleClick() {
+        // const loadingSpinner = document.querySelector("#spinner")
+        // loadingSpinner.classList.remove("hidden")
+    }
+</script>
+
+
+</html>

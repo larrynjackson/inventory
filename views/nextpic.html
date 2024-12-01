@@ -1,0 +1,32 @@
+<div id="pictureDiv" class="flex justify-center flex-row  gap-5 align-right items-center">
+    
+    <button {{.Pictures.DisableLeft}} hx-post="/api/v1/nextpic" hx-trigger="click" hx-swap="innerHTML" hx-target="#pictureDiv" type="button"
+        id="nextBtn"
+        class="px-5 py-2 ring-5 ring-green-600 bg-transparent ring-opacity-25 w-[8%] h-8 rounded-full"
+        onclick="handleClick('prev')">
+        &lt;&lt;
+    </button>
+    <div class="mb-2">
+        <input type="text" name="selectedItem" id="selectedItem" value="" class="hidden" />
+    </div>
+    <div class="mb-2">
+        <input type="text" name="currentFile" id="currentFile" value="{{.Pictures.CurrentFile}}" class="hidden" />
+    </div>
+    <div class="mb-2">
+        <input type="text" name="fileDirection" id="fileDirection" value="" class="hidden" />
+    </div>
+   
+    <article class="max-w-sm rounded overflow-hidden shadow-lg">
+        
+            <img class="w-80 h-64 p-4"
+            src="{{ .Pictures.DisplayFile }}"
+            alt="No Pictures"/>         
+    </article>
+    <button {{.Pictures.DisableRight}} hx-post="/api/v1/nextpic" hx-trigger="click" hx-swap="innerHTML" hx-target="#pictureDiv" type="button"
+        id="nextBtn"
+        class="px-5 py-2 ring-5 ring-green-600 bg-transparent ring-opacity-25 w-[8%] h-8 rounded-full"
+        onclick="handleClick('next')">
+        &gt;&gt;
+    </button>
+
+</div>

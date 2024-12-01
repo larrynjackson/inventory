@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.2/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.3"
+        integrity="sha384-0895/pl2MU10Hqc6jd4RvrthNlDiE9U1tWmX7WRESftEDRosgxNsQG/Ze9YMRzHq"
+        crossorigin="anonymous"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <script type="module" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule="" src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons/ionicons.js"></script>
+</head>
+
+<body>
+    <header class="bg-white">
+        <nav class="flex  justify-between items-center w-[92%]  mx-auto">
+            <div>
+
+                <img class="w-20 p-1" src="{{ .MenuImageFile }}" alt="flag" />
+            </div>
+            <h1 class="text-2xl">Inventory System</h1>
+            <button hx-get="/api/v1/loginform" hx-trigger="click" hx-swap="outerHTML" hx-target="body" type="button"
+                class="px-5 py-2 ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[15%] h-12 rounded-full"
+                id="submitBtn">
+                Log In
+            </button>
+        </nav>
+    </header>
+    <hr class="my-0 h-4 border-t-2 bg-red-100 dark:bg-red/10" />
+    <div class="bg-cover bg-center h-screen"
+        style="background-image: url('http://localhost:8000/api/v1/getfile/ohioriverview.jpg');">
+        <!-- Your content here -->
+        <div id="mainPage" class="flex flex-col gap-20 align-center items-center">
+
+            <div class="grid grid-cols-1 align-center gap-5">
+                <div>
+                    <input type="text" name="errorMsg" id="errorMsg" disabled="true" value="{{ .Message}}"
+                        class="bg-transparent text-red-700 text text-center w-full h-12 rounded-lg px-5">
+                </div>
+                <div>
+                    <input type="text" name="message" id="message" disabled="true" value="All fields required."
+                        class="bg-transparent text-red-700 text text-center w-full h-12 rounded-lg px-5">
+                </div>
+                <div class="col-1">
+                    <h1 class="mb-4 text-center text-white text-2xl">Account Sign In</h1>
+                    <div class="relative max-w-sm flex w-full flex-col rounded-xl bg-white shadow">
+                        <nav class="flex min-w-[240px] flex-row gap-1 p-2">
+                            <div role="button"
+                                class="flex w-full items-center rounded-lg p-0 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100">
+                                <label for="loginRadio" class="flex w-full cursor-pointer items-center px-3 py-2">
+                                    <div class="inline-flex items-center">
+                                        <label class="relative flex items-center cursor-pointer" for="react-horizontal">
+                                            <input name="ActionSelector" type="radio" checked
+                                                class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                                                id="loginRadio" onclick="handleRadioClick('loginRadio')" />
+                                            <span
+                                                class="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+                                        </label>
+                                        <label class="ml-2 text-slate-600 cursor-pointer text-sm"
+                                            for="react-horizontal">
+                                            Login
+                                        </label>
+                                    </div>
+                                </label>
+                            </div>
+                            <div role="button"
+                                class="flex w-full items-center rounded-lg p-0 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100">
+                                <label for="resetPasswordRadio"
+                                    class="flex w-full cursor-pointer items-center px-3 py-2">
+                                    <div class="inline-flex items-center">
+                                        <label class="relative flex items-center cursor-pointer" for="vue-horizontal">
+                                            <input name="ActionSelector" type="radio"
+                                                class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                                                id="resetPasswordRadio"
+                                                onclick="handleRadioClick('resetPasswordRadio')" />
+                                            <span
+                                                class="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+                                        </label>
+                                        <label class="ml-2 text-slate-600 cursor-pointer text-sm" for="vue-horizontal">
+                                            Forgot Password
+                                        </label>
+                                    </div>
+                                </label>
+                            </div>
+                            <div role="button"
+                                class="flex w-full items-center rounded-lg p-0 transition-all hover:bg-slate-100 focus:bg-slate-100 active:bg-slate-100">
+                                <label for="registerUserRadio"
+                                    class="flex w-full cursor-pointer items-center px-3 py-2">
+                                    <div class="inline-flex items-center">
+                                        <label class="relative flex items-center cursor-pointer"
+                                            for="svelte-horizontal">
+                                            <input name="ActionSelector" type="radio"
+                                                class="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-slate-300 checked:border-slate-400 transition-all"
+                                                id="registerUserRadio"
+                                                onclick="handleRadioClick('registerUserRadio')" />
+                                            <span
+                                                class="absolute bg-slate-800 w-3 h-3 rounded-full opacity-0 peer-checked:opacity-100 transition-opacity duration-200 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"></span>
+                                        </label>
+                                        <label class="ml-2 text-slate-600 cursor-pointer text-sm"
+                                            for="svelte-horizontal">
+                                            Register User
+                                        </label>
+                                    </div>
+                                </label>
+                            </div>
+                        </nav>
+                    </div>
+                    <form id="loginForm">
+                        <div class="mb-2">
+                            <input type="text" name="machineId" id="machineId" value="" class="hidden" />
+                        </div>
+                        <div class="mb-2">
+                            <label class="text-white" for="userId">Username (valid email address)</label>
+                            <input autofocus type="text" name="userId" id="userId" oninput="handleChange()"
+                                class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                        </div>
+                        <div id="passwordDiv" class="mb-3">
+                            <label class="text-white" for="password">Password</label>
+                            <input name="password" id="password" oninput="handleChange()" type="password"
+                                class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                        </div>
+                        <div id="passCodeDiv" class="hidden mb-3">
+                            <label class="text-white" for="passCode">Retype Password</label>
+                            <input name="passCode" id="passCode" oninput="handleChange()" type="password"
+                                class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                        </div>
+
+                        <button hx-post="/api/v1/auth" hx-swap="outerHTML" hx-target="body" hx-trigger="click"
+                            id="loginBtn"
+                            class="w-full ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[40%] h-10 rounded-full g-2"
+                            disabled="true">
+                            Login
+                        </button>
+                        <div class="p-2">
+                            <p></p>
+                        </div>
+
+                        <button hx-post="/api/v1/resetpassword" hx-swap="outerHTML" hx-target="body" hx-trigger="click"
+                            id="pwdResetBtn"
+                            class="hidden w-full ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[40%] h-10 rounded-full g-2"
+                            disabled="true">
+                            Forgot Password
+                        </button>
+                        <div class="p-2">
+                            <p></p>
+                        </div>
+                        <button hx-post="/api/v1/add/user" hx-swap="outerHTML" hx-target="body" hx-trigger="click"
+                            id="regUserBtn"
+                            class="hidden w-full ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[40%] h-10 rounded-full g-2"
+                            disabled="true">
+                            Register User
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+
+    function handleRadioClick(item) {
+        handleChange()
+        if (item === "loginRadio") {
+
+            let password = document.getElementById("passwordDiv");
+            password.classList.remove("hidden");
+            let passCode = document.getElementById("passCodeDiv");
+            passCode.classList.add("hidden");
+            let loginBtn = document.getElementById("loginBtn");
+            loginBtn.classList.remove("hidden");
+            let regBtn = document.getElementById("pwdResetBtn");
+            regBtn.classList.add("hidden");
+            let resetBtn = document.getElementById("regUserBtn");
+            resetBtn.classList.add("hidden");
+            document.getElementById("userId").focus();
+        }
+        if (item === "resetPasswordRadio") {
+
+            let password = document.getElementById("passwordDiv");
+            password.classList.add("hidden");
+            let passCode = document.getElementById("passCodeDiv");
+            passCode.classList.add("hidden");
+            let loginBtn = document.getElementById("loginBtn");
+            loginBtn.classList.add("hidden");
+            let regBtn = document.getElementById("pwdResetBtn");
+            regBtn.classList.remove("hidden");
+            let resetBtn = document.getElementById("regUserBtn");
+            resetBtn.classList.add("hidden");
+            document.getElementById("userId").focus();
+        }
+
+        if (item === "registerUserRadio") {
+
+            let password = document.getElementById("passwordDiv");
+            password.classList.remove("hidden");
+            let passCode = document.getElementById("passCodeDiv");
+            passCode.classList.remove("hidden");
+            let loginBtn = document.getElementById("loginBtn");
+            loginBtn.classList.add("hidden");
+            let resetBtn = document.getElementById("pwdResetBtn");
+            resetBtn.classList.add("hidden");
+            let regBtn = document.getElementById("regUserBtn");
+            regBtn.classList.remove("hidden");
+            document.getElementById("userId").focus();
+        }
+
+    }
+
+
+    function handleChange() {
+
+        let activeBtn
+        let inputs = [];
+
+        if (document.getElementById("loginRadio").checked) {
+            activeBtn = document.getElementById("loginBtn");
+            inputs.push(document.querySelector("#userId"));
+            inputs.push(document.querySelector("#password"));
+        }
+        if (document.getElementById("resetPasswordRadio").checked) {
+            activeBtn = document.getElementById("pwdResetBtn");
+            inputs.push(document.querySelector("#userId"));
+        }
+        if (document.getElementById("registerUserRadio").checked) {
+            activeBtn = document.getElementById("regUserBtn");
+            inputs.push(document.querySelector("#userId"));
+            inputs.push(document.querySelector("#password"));
+            inputs.push(document.querySelector("#passCode"));
+        }
+
+        let isValid = true;
+
+        for (var i = 0; i < inputs.length; i++) {
+            let changedInput = inputs[i];
+            if (changedInput.value.trim() === "" || changedInput.value === null) {
+                isValid = false;
+            }
+        }
+        let msg = document.querySelector("#message")
+
+        if (isValid) {
+            msg.value = "";
+        } else {
+            msg.value = "All fields required.";
+        }
+        activeBtn.disabled = !isValid;
+    }
+
+</script>
+
+
+<script type="text/javascript">
+
+
+    function getMachineId() {
+        let machineId = localStorage.getItem('MachineId');
+
+        if (!machineId) {
+            machineId = crypto.randomUUID();
+            localStorage.setItem('MachineId', machineId);
+        }
+
+        return machineId;
+    }
+
+    document.getElementById("machineId").value = getMachineId();
+
+</script>
+
+
+
+</html>
