@@ -170,7 +170,8 @@ func (s *Server) Run() {
 
 	go s.CleanStackMap()
 
-	rand.Seed(uint64(time.Second / time.Millisecond))
+	secondsSinceEpoch := time.Now().Unix()
+	rand.Seed(uint64(secondsSinceEpoch))
 
 	log.Info().Msgf("Starting server: '%s'", s.Listen)
 	if err := http.ListenAndServe(s.Listen, handlers.CORS(credentials, methods, origins)(loggedRouter)); err != nil {
