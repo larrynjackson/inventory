@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github/lnj/inventory/model"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -163,13 +164,37 @@ func (s *Server) apiCopyFile(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<h1>Good Bye</h1>"))
 		return
 	}
-	pictureFile := r.PostFormValue("pictureFile")
-	pictureFilePath := r.PostFormValue("pictureFilePath")
+	r.ParseMultipartForm(10 << 20)
+
+	file, handler, err := r.FormFile("copyfile")
+	if err != nil {
+		items.Message = "Read file failed."
+		executeTemplateReturn(w, &items, "file.html")
+	}
+	defer file.Close()
+	fmt.Printf("upload file: %+v\n", handler.Filename)
+	fmt.Printf("file size: %+v\n", handler.Size)
+
 	itemSelect := r.PostFormValue("selectedItem")
 
-	var srcFile string = pictureFilePath
-	var destFile string = "./images/" + itemSelect + "/" + pictureFile
+	var destFile string = "./images/" + itemSelect + "/" + handler.Filename
+
 	tKey := s.getTKeyHelper(token)
+
+	tempFile, err := os.Create(destFile)
+	if err != nil {
+		items.Message = "File copy failed."
+		executeTemplateReturn(w, &items, "file.html")
+	}
+	defer tempFile.Close()
+
+	fileBytes, err := io.ReadAll(file)
+	if err != nil {
+		items.Message = "Read file failed."
+		executeTemplateReturn(w, &items, "file.html")
+	}
+
+	tempFile.Write(fileBytes)
 
 	PrintCollisionCount()
 	PrintKeyMapSize()
@@ -180,6 +205,7 @@ func (s *Server) apiCopyFile(w http.ResponseWriter, r *http.Request) {
 		executeTemplateReturn(w, &items, "menu.html")
 		return
 	}
-	items.Message = copyFileHelper(srcFile, destFile)
+
+	items.Message = "Upload complete"
 	executeTemplateReturn(w, &items, "file.html")
 }
