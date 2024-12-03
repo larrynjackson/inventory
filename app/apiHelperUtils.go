@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github/lnj/inventory/model"
 	"html/template"
-	"io"
 	"log"
 	"net/http"
 	"os"
@@ -107,46 +106,4 @@ func (s *Server) fillItemsHelper(items *model.Items, itemSelect, tKey string) (s
 	}
 	items.ItemList = itemList
 	return "", ok
-}
-
-func copyFileHelper(src, dest string) string {
-
-	inFile, err := os.Open(src)
-	if err != nil {
-		return "Can not open input file."
-	}
-
-	defer func() {
-		if err := inFile.Close(); err != nil {
-			panic(err)
-		}
-	}()
-
-	outFile, err := os.Create(dest)
-	if err != nil {
-		return "Can not create output file"
-	}
-
-	defer func() {
-		if err := outFile.Close(); err != nil {
-			panic(err)
-		}
-	}()
-
-	buf := make([]byte, 1024)
-	for {
-
-		n, err := inFile.Read(buf)
-		if err != nil && err != io.EOF {
-			panic(err)
-		}
-		if n == 0 {
-			break
-		}
-
-		if _, err := outFile.Write(buf[:n]); err != nil {
-			panic(err)
-		}
-	}
-	return "File copy complete."
 }

@@ -80,21 +80,21 @@
                             <div class="mb-2">
                                 <input type="text" name="selectedItem" id="selectedItem" value="" class="hidden" />
                             </div>
-                            <div class="mb-2">
-                                <input type="text" name="machineId" id="machineId" value="" class="hidden" />
-                            </div>
+                           
                             <div>
                                 <input type="text" name="pictureFile" id="pictureFile" class="hidden" />
                             </div>
 
                             <div>
-                                <input type="file" id="copyfile" onchange="handleChange()" /><br /><br />
-                                <label for="pictureFilePath">Enter File Path</label>
-                                <input type="text" name="pictureFilePath" id="pictureFilePath" oninput="handleChange()"
-                                    class="ring-0 ring-green-200 bg-green-100 ring-opacity-25 w-full h-12 rounded-lg px-5" />
+                                <input type="file" id="copyfile" name="copyfile" onchange="handleChange()" /><br /><br />
                                 <br /><br />
 
-                                <button hx-post="/api/v1/copyfile" hx-swap="outerHTML" hx-target="body" id="fileBtn"
+                                <button 
+                                    hx-post="/api/v1/copyfile" 
+                                    hx-swap="outerHTML" 
+                                    hx-target="body" 
+                                    hx-encoding="multipart/form-data"
+                                    id="fileBtn"
                                     type="submit" disabled="true"
                                     class="w-full ring-5 ring-green-600 bg-green-300 ring-opacity-25 w-[40%] h-10 rounded-full g-2"
                                     onclick="handleClick()">
@@ -106,17 +106,15 @@
                 </div>
                 <div class="p-2"></div>
 
-                <textarea rows="10" cols="70" readonly
+                <textarea rows="8" cols="70" readonly
                     class="p-2 ring-5 ring-green-600 bg-white ring-opacity-25 align-center">
 
                 To copy your images files into the Inventory System do the following:
                   1. Choose an Item by name.
                   2. Click the Browse... button to bring up the file select dialog
-                  3. Using the file dialog, locate the file to be copied
-                  4. Highlight the located file. then right click and select 'Copy Location'
-                  5. Click the Select button in the dialog box
-                  6. Click in the 'Enter File Path' box, then right click and Paste
-                  7. Submit by clicking the 'Copy File' button
+                  3. Using the file dialog, locate the file to be copied      
+                  4. Highlight the file and click the Select button in the dialog box
+                  5. Submit by clicking the 'Copy File' button
             </textarea>
             </div>
         </div>
@@ -130,10 +128,8 @@
 
         let itemSelected = document.getElementById("itemSelect").value;
         let fileValue = document.getElementById("copyfile").value;
-        let filePath = document.getElementById("pictureFilePath").value;
 
         let fileBtn = document.getElementById("fileBtn")
-
 
         let isValid = true;
 
@@ -142,10 +138,6 @@
         }
 
         if (fileValue.trim() === "" || fileValue === null) {
-            isValid = false;
-        }
-
-        if (filePath.trim() === "" || filePath === null) {
             isValid = false;
         }
 
@@ -164,31 +156,9 @@
         let itemSelected = document.getElementById("itemSelect").value
         document.getElementById("selectedItem").value = itemSelected
 
-        let filevalue = document.getElementById("copyfile").value;
-        let filearray = filevalue.split("\\");
-
-        document.getElementById("pictureFile").value = filearray[filearray.length - 1];
     }
 
 </script>
-
-
-
-<script type="text/javascript">
-
-    function getMachineId() {
-        let machineId = localStorage.getItem('MachineId');
-
-        if (!machineId) {
-            machineId = crypto.randomUUID();
-            localStorage.setItem('MachineId', machineId);
-        }
-
-        return machineId;
-    }
-    document.getElementById("machineId").value = getMachineId();
-</script>
-
 
 
 </html>
